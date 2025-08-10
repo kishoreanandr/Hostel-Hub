@@ -30,9 +30,14 @@ public class FoodReview {
     @Column(name = "review_date_time")
     private LocalDateTime reviewDateTime;
 
-    @Column(name = "image",columnDefinition = "LONGBLOB")
-    private byte[] image;
+    @Column(name = "image_path")
+    private String imagePath;
 
     @ManyToOne
     private User user;
+
+    // Method to check if image exists
+    public boolean hasImage() {
+        return imagePath != null && !imagePath.isEmpty();
+    }
 }

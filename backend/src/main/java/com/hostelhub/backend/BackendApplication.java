@@ -10,7 +10,6 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 public class BackendApplication {
 
 	public static void main(String[] args) {
-
 		SpringApplication.run(BackendApplication.class, args);
 	}
 

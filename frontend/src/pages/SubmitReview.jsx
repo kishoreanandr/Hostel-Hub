@@ -54,6 +54,7 @@ const SubmitReview = () => {
 
       setSuccess("Review submitted successfully!")
       setTimeout(() => {
+        alert("Confirmation Email has sent!..")
         navigate("/dashboard")
       }, 2000)
     } catch (error) {

@@ -29,10 +29,6 @@ public class CustomUserDetailsService implements UserDetailsService {
                 new SimpleGrantedAuthority("ROLE_" + user.getRole())  // Make sure role is prefixed with "ROLE_"
         );
 
-        return new org.springframework.security.core.userdetails.User(
-                user.getEmail(),
-                user.getPassword(),
-                authorities
-        );
+        return new CustomerUserDetails(user);
     }
 }

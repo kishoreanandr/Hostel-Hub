@@ -59,6 +59,7 @@ public class SecurityConfig {
                 .csrf(csrf->csrf.disable())
                 .authorizeHttpRequests(auth ->auth
                         .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers("/api/reviews/image/**").permitAll() // Allow image access without auth
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session->session

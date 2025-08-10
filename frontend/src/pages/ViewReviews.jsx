@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Container, Row, Col, Card, Form, Alert, Badge, Button } from "react-bootstrap"
+import { Container, Row, Col, Card, Form, Alert, Badge, Button, Modal } from "react-bootstrap"
 import axios from "axios"
 
 const ViewReviews = () => {
@@ -9,6 +9,8 @@ const ViewReviews = () => {
   const [filteredReviews, setFilteredReviews] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState("")
+  const [selectedImage, setSelectedImage] = useState(null)
+  const [showImageModal, setShowImageModal] = useState(false)
   const [filters, setFilters] = useState({
     mealType: "",
     date: "",
@@ -89,6 +91,16 @@ const ViewReviews = () => {
     if (rating >= 4) return "success"
     if (rating >= 3) return "warning"
     return "danger"
+  }
+
+  const handleImageClick = (imagePath) => {
+    setSelectedImage(`http://localhost:8080/api/reviews/image/${imagePath}`)
+    setShowImageModal(true)
+  }
+
+  const handleCloseImageModal = () => {
+    setShowImageModal(false)
+    setSelectedImage(null)
   }
 
   if (loading) {
@@ -193,9 +205,32 @@ const ViewReviews = () => {
 
                       {review.comments && <Card.Text>"{review.comments}"</Card.Text>}
 
-                      {review.image && (
-                        <div className="text-center">
-                          <Badge bg="info">📷 Image Attached</Badge>
+                      {review.imagePath && (
+                        <div className="text-center mt-3">
+                          <div className="mb-2">
+                            <img 
+                              src={`http://localhost:8080/api/reviews/image/${review.imagePath}`}
+                              alt="Review thumbnail"
+                              className="img-thumbnail"
+                              style={{ 
+                                maxWidth: '100px', 
+                                maxHeight: '100px',
+                                cursor: 'pointer'
+                              }}
+                              onClick={() => handleImageClick(review.imagePath)}
+                              onError={(e) => {
+                                e.target.style.display = 'none';
+                              }}
+                            />
+                          </div>
+                          <Button 
+                            variant="outline-info" 
+                            size="sm"
+                            onClick={() => handleImageClick(review.imagePath)}
+                            className="w-100"
+                          >
+                            📷 View Full Image
+                          </Button>
                         </div>
                       )}
                     </Card.Body>
@@ -204,6 +239,35 @@ const ViewReviews = () => {
               ))}
             </Row>
           )}
+
+          {/* Image Modal */}
+          <Modal show={showImageModal} onHide={handleCloseImageModal} size="lg">
+            <Modal.Header closeButton>
+              <Modal.Title>Review Image</Modal.Title>
+            </Modal.Header>
+            <Modal.Body className="text-center">
+              {selectedImage && (
+                <img 
+                  src={selectedImage} 
+                  alt="Review" 
+                  className="img-fluid" 
+                  style={{ maxHeight: '70vh' }}
+                  onError={(e) => {
+                    e.target.style.display = 'none';
+                    e.target.nextSibling.style.display = 'block';
+                  }}
+                />
+              )}
+              <div style={{ display: 'none' }} className="text-muted">
+                Image not available
+              </div>
+            </Modal.Body>
+            <Modal.Footer>
+              <Button variant="secondary" onClick={handleCloseImageModal}>
+                Close
+              </Button>
+            </Modal.Footer>
+          </Modal>
         </Col>
       </Row>
     </Container>
